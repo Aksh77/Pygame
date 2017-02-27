@@ -1,20 +1,9 @@
-# DNA-Arcade
-Modified version of the classic memory game
+# Games using Pygame 
+A collection of basic games made using Pygame
 
-### How to use
-* To clone the repository:
+### About Pygame
+Pygame is a cross-platform set of Python modules designed for writing video games. It includes computer graphics and sound libraries designed to be used with the Python programming language.
 
- ```bash
- git clone https://github.com/Aksh77/DNA-Arcade.git
- ```
-* Browse to Game directory :
+### List of Projects completed
 
- ```bash
- cd DNA-Arcade
- ```
- 
-* Compile and run the program :
-
- ```bash
- python memoryGame.py
- ```
+* Memory Game
