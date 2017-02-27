@@ -1,243 +1,100 @@
-import random, pygame, sys
-from pygame.locals import *
+import pygame,sys
+import game
+ 
+pygame.init()
 
-GRAY = (100,100,100)
-NAVYBLUE = (60,60,60)
-WHITE = (255,255,255)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-YELLOW = (255,255,0)
-ORANGE = (255,128,0)
-PURPLE = (255, 0, 255)
-CYAN = (0,255,255)
+myfont = pygame.font.SysFont('jokerman', 80)
+ 
+class MenuItem(pygame.font.Font):
+	def __init__(self, text, font=None, font_size=60,
+				 font_color=(255, 255, 255), (pos_x, pos_y)=(0, 0)):
+		pygame.font.Font.__init__(self, font, font_size)
+		self.text = text
+		self.font_size = font_size
+		self.font_color = font_color
+		self.label = self.render(self.text, 1, self.font_color)
+		self.width = self.label.get_rect().width
+		self.height = self.label.get_rect().height
+		self.dimensions = (self.width, self.height)
+		self.pos_x = pos_x
+		self.pos_y = pos_y
+		self.position = pos_x, pos_y
+ 
+	def set_position(self, x, y):
+		self.position = (x, y)
+		self.pos_x = x
+		self.pos_y = y
+ 
+	def set_font_color(self, rgb_tuple):
+		self.font_color = rgb_tuple
+		self.label = self.render(self.text, 1, self.font_color)
+ 
+	def is_mouse_selection(self, (posx, posy)):
+		if (posx >= self.pos_x and posx <= self.pos_x + self.width) and \
+			(posy >= self.pos_y and posy <= self.pos_y + self.height):
+				return True
+		return False
+ 
+ 
+class GameMenu():
+	def __init__(self, screen, items, funcs, bg_color=(0,0,0), font=None, font_size=60,
+					font_color=(255, 255, 255)):
+		self.screen = screen
+		self.scr_width = self.screen.get_rect().width
+		self.scr_height = self.screen.get_rect().height
+		self.funcs=funcs
+		self.bg_color = bg_color
+		self.clock = pygame.time.Clock()
+		self.items = []
+		for index, item in enumerate(items):
+			menu_item = MenuItem(item)
+ 
+			# t_h: total height of text block
+			t_h = len(items) * menu_item.height
+			pos_x = (self.scr_width / 2) - (menu_item.width / 2)
+			pos_y = (self.scr_height / 2) - (t_h / 2) + ((index * 2) + index * menu_item.height)
+ 
+			menu_item.set_position(pos_x, pos_y)
+			self.items.append(menu_item)
+ 
+	def run(self):
+		mainloop = True
+		while mainloop:
+			# Limit frame speed to 50 FPS
+			self.clock.tick(50)
+			
+			mpos=pygame.mouse.get_pos()
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					mainloop = False
+				if event.type==pygame.MOUSEBUTTONDOWN:
+					for item in self.items:
+						if item.is_mouse_selection(mpos):
+							self.funcs[item.text]()
+ 
+			# Redraw the background
+			self.screen.fill(self.bg_color)
+			label=myfont.render('DNA Arcade',1,(255,0,100))
+			self.screen.blit(label,(60,50))
+			#self.font_size
+			for item in self.items:
+				if item.is_mouse_selection(pygame.mouse.get_pos()):
+					item.set_font_color((0, 100, 255))
+				else:
+					item.set_font_color((255, 255, 255))
+				self.screen.blit(item.label, item.position)
+ 
+			pygame.display.flip()
 
-BGCOLOR = NAVYBLUE
-LIGHTBGCOLOR = GRAY
-BOXCOLOR = WHITE
-HIGHLIGHTCOLOR = BLUE
+def menu():
+	screen = pygame.display.set_mode((640, 480), 0, 32)
+	menu_items = ('Start', 'Quit')
+	s=pygame.font.get_fonts()
+	print s
+	pygame.display.set_caption('Game Menu')
+	funcs = {'Start': game.main, 'Quit': sys.exit}
+	gm = GameMenu(screen,funcs.keys(),funcs)
+	gm.run()
 
-A='A'
-G='G'
-T='T'
-C='C'
-
-COLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
-LETTERS = (A,G,T,C)
-
-FPS = 30
-WINDOWWIDTH = 640
-WINDOWHEIGHT = 480
-REVEALSPEED = 8
-BOXSIZE = 60
-GAPSIZE = 15
-BOARDWIDTH = 6
-BOARDHEIGHT = 5
-
-MARGIN_X = int((WINDOWWIDTH-(BOARDWIDTH*(BOXSIZE+GAPSIZE)))/2)
-MARGIN_Y = int((WINDOWHEIGHT-(BOARDHEIGHT*(BOXSIZE+GAPSIZE)))/2)
-
-
-def main():
-    global FPSCLOCK, DISPLAYSURF
-    pygame.init()
-    FPSCLOCK = pygame.time.Clock()
-    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    mousex = 0
-    mousey = 0
-    pygame.display.set_caption('Memory Game')
-    mainBoard = getRandomizedBoard()
-    revealedBoxes = generateRevealedBoxesData(False)
-    firstSelection = None
-    DISPLAYSURF.fill(BGCOLOR)
-    startGameAnimation(mainBoard)
-
-    while True:
-        mouseClicked = False
-        DISPLAYSURF.fill(BGCOLOR)
-        drawBoard(mainBoard, revealedBoxes)
-        for event in pygame.event.get():
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
-                pygame.quit()
-                sys.exit()
-            elif event.type == MOUSEMOTION:
-                mousex,mousey = event.pos
-            elif event.type == MOUSEBUTTONUP:
-                mousex,mousey = event.pos
-                mouseClicked = True
-        boxx, boxy = getBoxAtPixel(mousex,mousey)
-        if boxx!=None and boxy!=None:
-            if not revealedBoxes[boxx][boxy]:
-                drawHighlightBox(boxx,boxy)
-            if not revealedBoxes[boxx][boxy] and mouseClicked:
-                revealBoxesAnimation(mainBoard, [(boxx,boxy)])
-                revealedBoxes[boxx][boxy] = True
-
-                if firstSelection == None:
-                    firstSelection = (boxx,boxy)
-                else:
-                    icon1letter, icon1color = getLetterAndColor(mainBoard,firstSelection[0],firstSelection[1])
-                    icon2letter, icon2color = getLetterAndColor(mainBoard,boxx,boxy)
-                    if (icon1letter==A and icon2letter!=T) or (icon1letter==T and icon2letter!=A) or (icon1letter==C and icon2letter!=G) or (icon1letter==G and icon2letter!=C) or icon1color!=icon2color:
-                        pygame.time.wait(1000)
-                        coverBoxesAnimation(mainBoard,[(firstSelection[0],firstSelection[1]),(boxx,boxy)])
-                        revealedBoxes[firstSelection[0]][firstSelection[1]] = False
-                        revealedBoxes[boxx][boxy] = False
-                    elif hasWon(revealedBoxes):
-                        gameWonAnimation(mainBoard)
-                        pygame.time.wait(2000)
-                        mainBoard = getRandomizedBoard()
-                        revealedBoxes = generateRevealedBoxesData(False)
-                        drawBoard(mainBoard,revealedBoxes)
-                        pygame.display.update()
-                        pygame.time.wait(1000)
-                        startGameAnimation(mainBoard)
-                    firstSelection = None
-        pygame.display.update()
-        FPSCLOCK.tick(FPS)
-
-def generateRevealedBoxesData(val):
-    revealedBoxes = []
-    for i in range(BOARDWIDTH):
-        revealedBoxes.append([val]*BOARDHEIGHT)
-    return revealedBoxes
-
-def getRandomizedBoard():
-    icons  = []
-    icons1 = []
-    for color in COLORS:
-        for letter in LETTERS:
-            icons.append((letter,color))            
-    random.shuffle(icons)
-    numIcons = int(BOARDWIDTH*BOARDHEIGHT/2)
-    icons = icons[:numIcons]
-    for iconLetter,iconColor in icons:
-        if iconLetter == A:
-            icons1.append((T,iconColor))
-        elif iconLetter == T:
-            icons1.append((A,iconColor))
-        elif iconLetter == G:
-            icons1.append((C,iconColor))
-        elif iconLetter == C:
-            icons1.append((G,iconColor))
-    icons = icons + icons1
-    random.shuffle(icons)
-    board = []
-    for x in range(BOARDWIDTH):
-        column = []
-        for y in range(BOARDHEIGHT):
-            column.append(icons[0])
-            del icons[0]
-        board.append(column)
-    return board
-
-def splitIntoGroupsOf(groupSize, theList):
-    result = []
-    for i in range(0,len(theList),groupSize):
-        result.append(theList[i:i+groupSize])
-    return result
-
-def leftTopCoordsOfBox(boxx,boxy):
-    left = boxx*(BOXSIZE+GAPSIZE)+MARGIN_X
-    top  = boxy*(BOXSIZE+GAPSIZE)+MARGIN_Y
-    return (left,top)
-
-def getBoxAtPixel(x,y):
-    for boxx in range(BOARDWIDTH):
-        for boxy in range(BOARDHEIGHT):
-            left,top = leftTopCoordsOfBox(boxx,boxy)
-            boxRect = pygame.Rect(left,top,BOXSIZE,BOXSIZE)
-            if boxRect.collidepoint(x,y):
-                return (boxx,boxy)
-    return (None,None)
-
-def drawIcon(letter,color,boxx,boxy):
-    quarter = int(BOXSIZE*0.25)
-    half = int(BOXSIZE*0.5)
-    left,top=leftTopCoordsOfBox(boxx,boxy)
-    fontObj = pygame.font.Font('freesansbold.ttf',50)
-    if letter == A:
-        textSurfaceObj = fontObj.render('A',True,color)
-    elif letter == G:
-        fontObj = pygame.font.Font('freesansbold.ttf',50)
-        textSurfaceObj = fontObj.render('G',True,color)
-    elif letter == T:
-        fontObj = pygame.font.Font('freesansbold.ttf',50)
-        textSurfaceObj = fontObj.render('T',True,color)
-    elif letter == C:
-        fontObj = pygame.font.Font('freesansbold.ttf',50)
-        textSurfaceObj = fontObj.render('C',True,color)
-    textRectObj = textSurfaceObj.get_rect()
-    textRectObj.center = (left+half,top+half)
-    DISPLAYSURF.blit(textSurfaceObj,textRectObj)
-        
-def getLetterAndColor(board,boxx,boxy):
-    return board[boxx][boxy][0], board[boxx][boxy][1]
-
-def drawBoxCovers(board,boxes,coverage):
-    for box in boxes:
-        left,top=leftTopCoordsOfBox(box[0],box[1])
-        pygame.draw.rect(DISPLAYSURF,BGCOLOR,(left,top,BOXSIZE,BOXSIZE))
-        letter,color=getLetterAndColor(board,box[0],box[1])
-        drawIcon(letter,color,box[0],box[1])
-        if coverage>0:
-            pygame.draw.rect(DISPLAYSURF,BOXCOLOR,(left,top,coverage,BOXSIZE))
-    pygame.display.update()
-    FPSCLOCK.tick(FPS)
-
-def revealBoxesAnimation(board,boxesToReveal):
-    for coverage in range(BOXSIZE,(-REVEALSPEED)-1,-REVEALSPEED):
-        drawBoxCovers(board,boxesToReveal, coverage)
-
-def coverBoxesAnimation(board,boxesToCover):
-    for coverage in range(0,BOXSIZE+REVEALSPEED,REVEALSPEED):
-        drawBoxCovers(board,boxesToCover,coverage)
-
-def drawBoard(board,revealed):
-    for boxx in range(BOARDWIDTH):
-        for boxy in range(BOARDHEIGHT):
-            left,top=leftTopCoordsOfBox(boxx,boxy)
-            if not revealed[boxx][boxy]:
-                pygame.draw.rect(DISPLAYSURF,BOXCOLOR,(left,top,BOXSIZE,BOXSIZE))
-            else:
-                letter,color=getLetterAndColor(board,boxx,boxy)
-                drawIcon(letter,color,boxx,boxy)
-
-
-def drawHighlightBox(boxx,boxy):
-    left,top=leftTopCoordsOfBox(boxx,boxy)
-    pygame.draw.rect(DISPLAYSURF,HIGHLIGHTCOLOR,(left-5,top-5,BOXSIZE+10,BOXSIZE+10),4)
-
-def startGameAnimation(board):
-    coveredBoxes=generateRevealedBoxesData(False)
-    boxes=[]
-    for x in range(BOARDWIDTH):
-        for y in range(BOARDHEIGHT):
-            boxes.append((x,y))
-    random.shuffle(boxes)
-    boxGroups=splitIntoGroupsOf(8,boxes)
-    drawBoard(board,coveredBoxes)
-    for boxGroup in boxGroups:
-        revealBoxesAnimation(board,boxGroup)
-        coverBoxesAnimation(board,boxGroup)
-
-def gameWonAnimation(board):
-    coveredBoxes=generateRevealedBoxesData(True)
-    color1=LIGHTBGCOLOR
-    color2=BGCOLOR
-    for i in range(13):
-        color1,color2=color2,color1
-        DISPLAYSURF.fill(color1)
-        drawBoard(board,coveredBoxes)
-        pygame.display.update()
-        pygame.time.wait(300)
-
-def hasWon(revealedBoxes):
-    for i in revealedBoxes:
-        if False in i:
-            return False
-    return True
-
-if __name__=='__main__':
-    main()
-        
+if __name__ == "__main__":
+	menu()
