@@ -3,7 +3,7 @@ import game
  
 pygame.init()
 
-myfont = pygame.font.SysFont('jokerman', 80)
+myfont = pygame.font.SysFont('jokerman', 120)
  
 class MenuItem(pygame.font.Font):
 	def __init__(self, text, font=None, font_size=60,
