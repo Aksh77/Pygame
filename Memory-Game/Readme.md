@@ -10,11 +10,11 @@ Modified version of the classic memory game
 * Browse to Game directory :
 
  ```bash
- cd Pygame
+ cd Pygame/Memory-Game
  ```
  
 * Compile and run the program :
 
  ```bash
- python memoryGame.py
+ python DNA_Arcade.py
  ```
