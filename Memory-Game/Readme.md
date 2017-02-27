@@ -5,12 +5,12 @@ Modified version of the classic memory game
 * To clone the repository:
 
  ```bash
- git clone https://github.com/Aksh77/DNA-Arcade.git
+ git clone https://github.com/Aksh77/Pygame.git
  ```
 * Browse to Game directory :
 
  ```bash
- cd DNA-Arcade
+ cd Pygame
  ```
  
 * Compile and run the program :
