@@ -6,4 +6,4 @@ Pygame is a cross-platform set of Python modules designed for writing video game
 
 ### List of Projects completed
 
-* Memory Game
+* [Memory Game](https://github.com/Aksh77/Pygame/tree/master/Memory-Game)
