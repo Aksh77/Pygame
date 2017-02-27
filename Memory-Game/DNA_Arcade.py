@@ -1,5 +1,5 @@
 import pygame,sys
-import DNA_Arcade as game
+import game
  
 pygame.init()
 
