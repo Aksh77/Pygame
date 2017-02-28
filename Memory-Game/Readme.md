@@ -35,6 +35,5 @@ Instead of matching the tiles having the same object, you need to match the tile
 
 ### To-Do
 
-* Add Difficulty levels (Board Size)
 * Calculate Time Elapsed
 * Count Number of moves
