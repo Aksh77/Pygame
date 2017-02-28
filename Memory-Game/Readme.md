@@ -1,13 +1,13 @@
 # DNA-Arcade
 Modified version of the classic memory game
 
-
+<!--
 ![Game Menu](https://drive.google.com/open?id=0B9BHERpTEv_GNWhaeXIzRmNsaHc)
 
 ![Select Difficulty](https://drive.google.com/open?id=0B9BHERpTEv_GVS03eU1zNVAzTDQ)
 
 ![Game Board](https://drive.google.com/open?id=0B9BHERpTEv_GR0kySVh3b2VuSHc)
-
+-->
 
 ### How to use
 * To clone the repository:
