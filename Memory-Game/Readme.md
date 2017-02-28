@@ -2,7 +2,7 @@
 Modified version of the classic memory game
 
 
-![Memory Game Screenshot](Selection_001.png?raw=true "Memory Game")
+<!--![Memory Game Screenshot](Selection_001.png?raw=true "Memory Game")-->
 
 
 ### How to use
