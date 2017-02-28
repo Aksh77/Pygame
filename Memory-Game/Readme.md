@@ -26,6 +26,12 @@ Modified version of the classic memory game
  ```bash
  python DNA_Arcade.py
  ```
+ 
+ 
+### Dependencies
+* Python 2.x
+* Pygame 1.9
+
 
 ### How to Play
 
