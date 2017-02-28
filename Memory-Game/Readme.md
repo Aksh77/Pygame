@@ -1,9 +1,13 @@
 # DNA-Arcade
 Modified version of the classic memory game
 
+<!--
+![Game Menu](https://drive.google.com/open?id=0B9BHERpTEv_GNWhaeXIzRmNsaHc)
 
-<!--![Memory Game Screenshot](Selection_001.png?raw=true "Memory Game")-->
+![Select Difficulty](https://drive.google.com/open?id=0B9BHERpTEv_GVS03eU1zNVAzTDQ)
 
+![Game Board](https://drive.google.com/open?id=0B9BHERpTEv_GR0kySVh3b2VuSHc)
+-->
 
 ### How to use
 * To clone the repository:
@@ -32,6 +36,14 @@ Instead of matching the tiles having the same object, you need to match the tile
 * Both the tiles should have the letters with the same colour in order to match.
 * The Game is won when all the pairs are matched.
 
+### Features
+3 Difficulty levels :
+
+* Easy   (Board size: 4 X 4)
+
+* Medium (Board size: 6 X 5)
+
+* Hard   (Board Size: 8 X 7)
 
 ### To-Do
 
