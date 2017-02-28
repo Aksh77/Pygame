@@ -1,5 +1,5 @@
 import pygame,sys
-import game
+import level
  
 pygame.init()
 
@@ -92,7 +92,7 @@ def menu():
 	s=pygame.font.get_fonts()
 	print s
 	pygame.display.set_caption('Game Menu')
-	funcs = {'Start': game.main, 'Quit': sys.exit}
+	funcs = {'Start': level.main, 'Quit': sys.exit}
 	gm = GameMenu(screen,funcs.keys(),funcs)
 	gm.run()
 
