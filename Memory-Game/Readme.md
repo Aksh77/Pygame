@@ -22,6 +22,12 @@ Modified version of the classic memory game
  ```bash
  cd Pygame/Memory-Game
  ```
+
+* Install the dependencies
+ 
+ ```bash
+ sudo pip -r requirements.txt
+ ```
  
 * Compile and run the program :
 
