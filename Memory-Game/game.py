@@ -1,5 +1,7 @@
-import random, pygame, sys
+import random, pygame, sys, os, json
 from pygame.locals import *
+
+gamedata = dict() # Global dictionary Variable for storing game data to write to a file
 
 GRAY = (100,100,100)
 NAVYBLUE = (60,60,60)
@@ -260,6 +262,35 @@ def hasWon(revealedBoxes):
         if False in i:
             return False
     return True
+
+def save_datafile():
+    """
+    Saves the data dictionary to a file named data_file
+    """
+    global gamedata
+    data_file = os.path.join(os.path.dirname(__file__),"data.json")
+    with open(data_file, "w") as dataf:
+        json.dump(gamedata, dataf)
+
+
+def load_datafile():
+    """
+    Loads the data dictionary form a file named data_file
+    """
+    global gamedata
+    data_file = os.path.join(os.path.dirname(__file__),"data.json")
+    try:
+        with open(data_file) as dataf:
+            gamedata = json.load(dataf)
+    except IOError:
+        return # Returns nothing if file is not found. Willnot cause an error.
+    except:
+        # JSON unable to parse. Just delete the corrupted file
+        try:
+            os.remove(data_file)
+        except:
+            pass
+
 
 if __name__=='__main__':
     main2()
