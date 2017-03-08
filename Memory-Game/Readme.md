@@ -26,7 +26,7 @@ Modified version of the classic memory game
 * Install the dependencies
  
  ```bash
- sudo pip -r requirements.txt
+ sudo pip install -r requirements.txt
  ```
  
 * Compile and run the program :
