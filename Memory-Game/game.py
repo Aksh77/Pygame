@@ -69,8 +69,6 @@ def main3():
 def startgame():
     global FPSCLOCK, DISPLAYSURF
     pygame.init()
-    pygame.mixer.music.load('Sounds/bg.mp3')
-    pygame.mixer.music.play(-1)
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     mousex = 0
@@ -122,6 +120,9 @@ def startgame():
                         pygame.time.wait(2000)
                         mainBoard = getRandomizedBoard()
                         revealedBoxes = generateRevealedBoxesData(False)
+                        DISPLAYSURF.fill(BGCOLOR)
+                        pygame.display.update()
+                        pygame.time.wait(1000)
                         drawBoard(mainBoard,revealedBoxes)
                         pygame.display.update()
                         pygame.time.wait(1000)
@@ -243,6 +244,8 @@ def drawHighlightBox(boxx,boxy):
     pygame.draw.rect(DISPLAYSURF,HIGHLIGHTCOLOR,(left-5,top-5,BOXSIZE+10,BOXSIZE+10),4)
 
 def startGameAnimation(board):
+    pygame.mixer.music.load('Sounds/bg.mp3')
+    pygame.mixer.music.play(-1)
     coveredBoxes=generateRevealedBoxesData(False)
     boxes=[]
     for x in range(BOARDWIDTH):
@@ -270,7 +273,7 @@ def gameWonAnimation(board):
         DISPLAYSURF.blit(textSurfaceObj,textRectObj)
         pygame.display.update()
         pygame.time.wait(300)
-
+        
 def hasWon(revealedBoxes):
     for i in revealedBoxes:
         if False in i:
