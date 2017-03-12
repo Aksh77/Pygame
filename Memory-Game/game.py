@@ -1,6 +1,9 @@
 import random, pygame, sys, os, json
 from pygame.locals import *
 
+pygame.init()
+pygame.mixer.init()
+
 gamedata = dict() # Global dictionary Variable for storing game data to write to a file
 
 GRAY = (100,100,100)
@@ -33,7 +36,7 @@ WINDOWHEIGHT = 480
 REVEALSPEED = 8
 
 def main1():
-    global BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y    
+    global MOVES, BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y    
     BOXSIZE = 60
     GAPSIZE = 20
     BOARDWIDTH = 4
@@ -43,7 +46,7 @@ def main1():
     startgame()
     
 def main2():
-    global BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y
+    global MOVES, BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y
     BOXSIZE = 60
     GAPSIZE = 15
     BOARDWIDTH = 6
@@ -53,7 +56,7 @@ def main2():
     startgame()
 
 def main3():
-    global BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y
+    global MOVES, BOXSIZE, GAPSIZE, BOARDWIDTH, BOARDHEIGHT, MARGIN_X, MARGIN_Y
     BOXSIZE = 50
     GAPSIZE = 10
     BOARDWIDTH = 8
@@ -66,10 +69,13 @@ def main3():
 def startgame():
     global FPSCLOCK, DISPLAYSURF
     pygame.init()
+    pygame.mixer.music.load('bg.mp3')
+    pygame.mixer.music.play(-1)
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     mousex = 0
     mousey = 0
+    MOVES = 0
     pygame.display.set_caption('Memory Game')
     mainBoard = getRandomizedBoard()
     revealedBoxes = generateRevealedBoxesData(False)
@@ -78,6 +84,7 @@ def startgame():
     startGameAnimation(mainBoard)
 
     while True:
+        pickup_music=pygame.mixer.Sound('pickup.wav')
         mouseClicked = False
         DISPLAYSURF.fill(BGCOLOR)
         drawBoard(mainBoard, revealedBoxes)
@@ -90,6 +97,8 @@ def startgame():
             elif event.type == MOUSEBUTTONUP:
                 mousex,mousey = event.pos
                 mouseClicked = True
+                MOVES = MOVES + 1
+                pickup_music.play()
         boxx, boxy = getBoxAtPixel(mousex,mousey)
         if boxx!=None and boxy!=None:
             if not revealedBoxes[boxx][boxy]:
@@ -247,13 +256,18 @@ def startGameAnimation(board):
         coverBoxesAnimation(board,boxGroup)
 
 def gameWonAnimation(board):
+    pygame.mixer.music.stop()
     coveredBoxes=generateRevealedBoxesData(True)
     color1=LIGHTBGCOLOR
     color2=BGCOLOR
     for i in range(13):
         color1,color2=color2,color1
         DISPLAYSURF.fill(color1)
-        drawBoard(board,coveredBoxes)
+        fontObj = pygame.font.Font('freesansbold.ttf',70)
+        textSurfaceObj = fontObj.render('You Won !',True, YELLOW)
+        textRectObj = textSurfaceObj.get_rect()
+        textRectObj.center = (WINDOWWIDTH/2,WINDOWHEIGHT/2)
+        DISPLAYSURF.blit(textSurfaceObj,textRectObj)
         pygame.display.update()
         pygame.time.wait(300)
 
