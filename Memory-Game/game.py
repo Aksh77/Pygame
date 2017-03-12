@@ -69,7 +69,7 @@ def main3():
 def startgame():
     global FPSCLOCK, DISPLAYSURF
     pygame.init()
-    pygame.mixer.music.load('bg.mp3')
+    pygame.mixer.music.load('Sounds/bg.mp3')
     pygame.mixer.music.play(-1)
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
@@ -84,7 +84,7 @@ def startgame():
     startGameAnimation(mainBoard)
 
     while True:
-        pickup_music=pygame.mixer.Sound('pickup.wav')
+        pickup_music=pygame.mixer.Sound('Sounds/pickup.wav')
         mouseClicked = False
         DISPLAYSURF.fill(BGCOLOR)
         drawBoard(mainBoard, revealedBoxes)
