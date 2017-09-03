@@ -44,11 +44,11 @@ Modified version of the classic memory game
 ### How to Play
 
 This is the modified version of the classic Memory Game.
-Instead of matching the tiles having the same object, you need to match the tiles having Complimentary Base pairs of DNA.
+You need to match the tiles having Complimentary Base pairs of DNA i.e A should match with T and G should match with C.
 
-* **A** (Adenine) pairs with **T** (Thymine)  and **C** (Cytosine) pairs with **G** (Guanine).
-* Both the tiles should have the letters with the same colour in order to match.
-* The Game is won when all the pairs are matched.
+* Both the tiles should have the letters with the same colour in order to match i.e a green **A** should pair with a green **T**.
+* The tiles that are paired disappear. The game ends when the board is empty.
+* Scoring is based on number of moves taken to finish the game.
 
 ### Features
 3 Difficulty levels :
