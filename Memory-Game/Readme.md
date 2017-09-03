@@ -61,6 +61,6 @@ Instead of matching the tiles having the same object, you need to match the tile
 
 ### To-Do
 
-* Count Number of moves
-* Save Highscore
-* Add Sound effects
+* Count Number of moves.
+* Save Highscore.
+* Add Sound effects.
